@@ -1,6 +1,7 @@
 import click
 from click import STRING, INT, FLOAT, BOOL
 from requests.exceptions import SSLError
+import OpenSSL
 from owslib.wps import WebProcessingService
 from owslib.wps import ComplexDataInput
 from owslib.wps import SYNC, ASYNC
@@ -44,3 +45,7 @@ def cli(ctx, **options):
         monitor(execution)
     except SSLError:
         raise ConnectionError('SSL verification of server certificate failed.')
+    except OpenSSL.SSL.Error:
+        raise ConnectionError('SSL error occurred. Did you use an invalid client certificate?')
+    except Exception:
+        raise ConnectionError('Connection failed.')
